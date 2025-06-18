@@ -1,0 +1,7 @@
+venv/
+# Environment variables
+backend/.env
+
+# Node/React frontend
+riskassessment/node_modules/
+riskassessment/build/
