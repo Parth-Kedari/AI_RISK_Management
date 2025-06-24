@@ -83,7 +83,7 @@ const FileUpload = ({ setRiskItems, isLoading, setIsLoading, setUploadedFileName
     setIsLoading(true);
 
     try {
-      const response = await axios.post('http://localhost:5001/api/upload', formData, {
+      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           'User-ID': userId, // Include User-ID in the headers

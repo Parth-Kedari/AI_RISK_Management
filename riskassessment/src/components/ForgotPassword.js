@@ -93,7 +93,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/forgot-password', { email });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, { email });
       if (res.data.success) {
         toast.success('OTP sent to your email address');
         setStep(2);
@@ -111,7 +111,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/resend-otp', { email });
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/resend-otp`, { email });
       if (res.data.success) {
         toast.success('New OTP sent to your email address');
         setResendCooldown(60);
@@ -143,7 +143,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post('http://localhost:5001/api/auth/reset-password', {
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/reset-password`, {
         email,
         otp,
         new_password: newPassword,

@@ -20,7 +20,7 @@ const History = () => {
           return;
         }
 
-        const response = await axios.get('http://localhost:5001/api/history', {
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/history`, {
           headers: { 'User-ID': userId },
         });
 
@@ -215,7 +215,7 @@ const History = () => {
     if (!window.confirm('Are you sure you want to delete this document from your history?')) return;
     
     try {
-      const response = await axios.delete('http://localhost:5001/api/history', {
+      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/history`, {
         headers: { 'User-ID': userId },
         data: { file_name: item.file_name }
       });
