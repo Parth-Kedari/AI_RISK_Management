@@ -1,7 +1,41 @@
 venv/
+ENV/
+env/
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # Environment variables
 backend/.env
+.env
+*.env
+*.secret
 
 # Node/React frontend
 riskassessment/node_modules/
 riskassessment/build/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Database
+backend/instance/
+
+# Uploads
+backend/uploads/
+
+# Ignore log files
+*.log
+
+# Ignore coverage reports
+coverage/
+*.cover
+
+# Ignore IDE/editor folders
+.vscode/
+.idea/
