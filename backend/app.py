@@ -683,5 +683,9 @@ def health_check():
     """API endpoint for health check."""
     return jsonify({"status": "alive"})
 
+@app.route('/')
+def index():
+    return "AI Risk Management Backend is running."
+
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
