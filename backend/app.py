@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = Flask(__name__)
-CORS(app, origins=["http://localhost:3000", "https://ai-risk-management-tdk7.onrender.com"]) 
+CORS(app, origins=["https://frontend-xu5d.onrender.com"]) 
 
 app.register_blueprint(auth, url_prefix='/api/auth')
 app.register_blueprint(risk_bp)
