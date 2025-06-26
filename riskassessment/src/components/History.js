@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaCalendarAlt, FaFileAlt, FaExclamationTriangle, FaInfoCircle, FaShieldAlt, FaCog, FaUsers, FaClipboardList } from 'react-icons/fa';
+import { API_BASE_URL } from '../endpoints/api';
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -20,7 +21,7 @@ const History = () => {
           return;
         }
 
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/history`, {
+        const response = await axios.get(`${API_BASE_URL}/api/history`, {
           headers: { 'User-ID': userId },
         });
 
@@ -215,7 +216,7 @@ const History = () => {
     if (!window.confirm('Are you sure you want to delete this document from your history?')) return;
     
     try {
-      const response = await axios.delete(`${process.env.REACT_APP_API_URL}/api/history`, {
+      const response = await axios.delete(`${API_BASE_URL}/api/history`, {
         headers: { 'User-ID': userId },
         data: { file_name: item.file_name }
       });

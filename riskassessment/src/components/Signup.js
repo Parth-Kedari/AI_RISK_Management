@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaEnvelope, FaLock, FaUser, FaShieldAlt, FaArrowLeft, FaEye, FaEyeSlash, FaInfoCircle } from 'react-icons/fa';
+import { API_BASE_URL } from '../endpoints/api';
 
 const Signup = () => {
   const [name, setName] = useState('');
@@ -82,7 +83,7 @@ const Signup = () => {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, {
+      const response = await axios.post(`${API_BASE_URL}/api/auth/register`, {
         name,
         email,
         password

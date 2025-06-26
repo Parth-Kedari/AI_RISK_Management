@@ -3,6 +3,7 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 import { FaEnvelope, FaKey, FaLock, FaShieldAlt, FaEye, FaEyeSlash, FaInfoCircle } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
+import { API_BASE_URL } from '../endpoints/api';
 
 const ForgotPassword = () => {
   const [step, setStep] = useState(1); // 1: email, 2: otp+new password
@@ -93,7 +94,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/forgot-password`, { email });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/forgot-password`, { email });
       if (res.data.success) {
         toast.success('OTP sent to your email address');
         setStep(2);
@@ -111,7 +112,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/resend-otp`, { email });
+      const res = await axios.post(`${API_BASE_URL}/api/auth/resend-otp`, { email });
       if (res.data.success) {
         toast.success('New OTP sent to your email address');
         setResendCooldown(60);
@@ -143,7 +144,7 @@ const ForgotPassword = () => {
 
     setIsLoading(true);
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/reset-password`, {
+      const res = await axios.post(`${API_BASE_URL}/api/auth/reset-password`, {
         email,
         otp,
         new_password: newPassword,
