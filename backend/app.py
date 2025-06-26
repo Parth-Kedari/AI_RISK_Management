@@ -6,6 +6,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from auth import auth
 from endpoints.risk_routes import risk_bp
+from flask_jwt_extended import JWTManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,6 +18,14 @@ CORS(app, origins=["http://localhost:3000", "https://ai-risk-management-tdk7.onr
 
 app.register_blueprint(auth, url_prefix='/api/auth')
 app.register_blueprint(risk_bp)
+
+# JWT setup for RS256
+app.config["JWT_ALGORITHM"] = "RS256"
+with open("private_key.pem", "r") as f:
+    app.config["JWT_PRIVATE_KEY"] = f.read()
+with open("public_key.pem", "r") as f:
+    app.config["JWT_PUBLIC_KEY"] = f.read()
+jwt = JWTManager(app)
 
 UPLOAD_FOLDER = 'uploads'
 if not os.path.exists(UPLOAD_FOLDER):

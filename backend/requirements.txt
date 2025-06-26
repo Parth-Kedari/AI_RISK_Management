@@ -12,3 +12,4 @@ pyjwt
 email-validator
 cryptography
 gunicorn
+flask-jwt-extended

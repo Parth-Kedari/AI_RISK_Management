@@ -10,6 +10,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from datetime import datetime, timedelta
 import re
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 
 MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017")
@@ -104,17 +105,29 @@ def login():
         return jsonify({"error": "Invalid email or password"}), 401
 
     # Generate JWT token
-    token = jwt.encode(
-        {"user_id": user["user_id"], "exp": datetime.utcnow() + timedelta(days=1)},
-        SECRET_KEY,
-        algorithm="HS256"
-    )
-    if isinstance(token, bytes):
-        token = token.decode('utf-8')
+    access_token = create_access_token(identity=user["user_id"])
 
     return jsonify({
         "success": True,
-        "token": token,
+        "token": access_token,
+        "user": {
+            "id": user["user_id"],
+            "name": user["name"],
+            "email": user["email"]
+        }
+    })
+
+# Example protected route
+@auth.route('/protected', methods=['GET'])
+@jwt_required()
+def protected():
+    current_user_id = get_jwt_identity()
+    user = users_collection.find_one({"user_id": current_user_id})
+    if not user:
+        return jsonify({"error": "User not found"}), 404
+    
+    return jsonify({
+        "success": True,
         "user": {
             "id": user["user_id"],
             "name": user["name"],
