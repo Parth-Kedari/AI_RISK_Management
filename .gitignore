@@ -5,3 +5,7 @@ backend/.env
 # Node/React frontend
 riskassessment/node_modules/
 riskassessment/build/
+
+# Sensitive keys
+backend/private_key.pem
+backend/public_key.pem
