@@ -68,6 +68,7 @@ def analyze_risks_with_groq(text):
     chunks = split_text(text)
     risk_reports = []
     for idx, chunk in enumerate(chunks):
+        print(f"Analyzing chunk {idx+1}/{len(chunks)}...")
         retry_attempts = 5
         delay = 2
         while retry_attempts > 0:
@@ -236,11 +237,11 @@ def map_severity(severity):
         return 5
     severity = str(severity).strip().lower()
     if severity in ["critical", "red"]:
-        return 9
+        return 10
     elif severity in ["high", "orange"]:
-        return 7
+        return 8
     elif severity in ["medium", "med", "yellow"]:
-        return 5
+        return 6
     elif severity in ["low", "green"]:
         return 3
     else:
@@ -251,11 +252,11 @@ def map_occurrence(probability):
         return 5
     probability = str(probability).strip().lower()
     if probability in ["high", "very high", "certain"]:
-        return 8
+        return 10
     elif probability in ["medium", "moderate", "likely"]:
-        return 5
+        return 6
     elif probability in ["low", "unlikely", "rare"]:
-        return 2
+        return 3
     else:
         return 5
 
@@ -326,8 +327,12 @@ def parse_suggested_actions(suggested_fix):
         actions = [suggested_fix]
     return actions
 
+
+# Enhanced FMEA logic with tiered thresholds and action levels
 def calculate_rpn_and_suggest_fixes(risk_items):
-    high_rpn_threshold = 125
+    RPN_HIGH = 200
+    RPN_MODERATE = 100
+    CN_HIGH = 70  # Severity (1-10) × Occurrence threshold
     fmea_results = []
     severity_distribution = {"Critical": 0, "High": 0, "Medium": 0, "Low": 0}
     for risk in risk_items:
@@ -336,6 +341,18 @@ def calculate_rpn_and_suggest_fixes(risk_items):
             occurrence = map_occurrence(risk.get("Probability", "Low"))
             detectability = calculate_detectability(risk)
             rpn = severity * occurrence * detectability
+            cn = severity * occurrence
+            # Action level logic
+            if rpn >= RPN_HIGH or cn >= CN_HIGH or severity >= 9:
+                action_level = "Immediate"
+            elif rpn >= RPN_MODERATE or cn >= (CN_HIGH // 2):
+                action_level = "Preventive"
+            elif severity >= 8:
+                action_level = "ManualReview"
+            else:
+                action_level = "Monitor"
+            # Logging for debugging
+            print(f"Risk: {risk.get('RiskName')} - RPN: {rpn} (S:{severity}, O:{occurrence}, D:{detectability}), CN: {cn}, ActionLevel: {action_level}")
             risk["FMEA"] = {
                 "Severity": severity,
                 "Occurrence": occurrence,
@@ -347,15 +364,20 @@ def calculate_rpn_and_suggest_fixes(risk_items):
                 "ResponsiblePerson": "",
                 "TargetDate": "",
                 "ActionTaken": "",
-                "UpdatedRPN": None
+                "UpdatedRPN": None,
+                "ActionLevel": action_level
             }
             risk["RPN"] = rpn
-            if rpn >= high_rpn_threshold:
+            risk["ActionLevel"] = action_level
+            # Generate suggestions only for Immediate/Preventive
+            if action_level in ["Immediate", "Preventive"]:
                 suggested_actions = generate_ai_suggestions(risk)
                 risk["FMEA"]["RecommendedActions"] = parse_suggested_actions(suggested_actions)
                 risk["SuggestedFix"] = suggested_actions
+            elif action_level == "ManualReview":
+                risk["SuggestedFix"] = "Manual review required by risk team."
             else:
-                risk["SuggestedFix"] = "No immediate action required. Monitor as part of regular review."
+                risk["SuggestedFix"] = "Monitor as part of regular review."
             severity_level = risk.get("RiskSeverity", "Unknown")
             if severity_level in severity_distribution:
                 severity_distribution[severity_level] += 1
