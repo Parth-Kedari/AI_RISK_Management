@@ -21,7 +21,7 @@ const Header = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    window.location.href = '/login'; // Force reload to login page after signout
+    navigate('/login', { replace: true }); // Use React Router navigation after signout
   };
 
   // Close dropdown when clicking outside
