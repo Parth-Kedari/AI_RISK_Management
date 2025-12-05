@@ -392,7 +392,29 @@ def generate_ai_suggestions(risk):
     try:
         prompt = f"""
         You are an AI specializing in risk mitigation strategies.
-        Given the following risk details, provide specific technical and non-technical mitigation strategies:
+        Given the following risk details, provide SPECIFIC, ACTIONABLE mitigation strategies.
+        
+        Format your response EXACTLY as follows - keep descriptions CONCISE (1-2 sentences max per item):
+        
+        TECHNICAL SOLUTIONS:
+        1. [Solution name]: [Brief 1-2 sentence description highlighting KEY action and benefit]
+        2. [Solution name]: [Brief 1-2 sentence description highlighting KEY action and benefit]
+        3. [Solution name]: [Brief 1-2 sentence description highlighting KEY action and benefit]
+        
+        PROCESS & POLICY:
+        1. [Policy name]: [Brief 1-2 sentence description of MAIN steps]
+        2. [Policy name]: [Brief 1-2 sentence description of MAIN steps]
+        3. [Policy name]: [Brief 1-2 sentence description of MAIN steps]
+        
+        GENERAL RECOMMENDATIONS:
+        1. [Recommendation]: [One concise sentence with the KEY point]
+        2. [Recommendation]: [One concise sentence with the KEY point]
+        3. [Recommendation]: [One concise sentence with the KEY point]
+        4. [Recommendation]: [One concise sentence with the KEY point]
+        5. [Recommendation]: [One concise sentence with the KEY point]
+        
+        IMPORTANT: Keep each description under 25 words. Focus on WHAT to do and WHY it matters, not lengthy explanations.
+        
         Risk Details:
         - Risk Name: {risk.get('RiskName', 'Unnamed Risk')}
         - Risk Category: {risk.get('RiskCategory', 'Uncategorized')}
@@ -400,7 +422,6 @@ def generate_ai_suggestions(risk):
         - Probability: {risk.get('Probability', 'Unknown')}
         - Impact: {risk.get('Impact', 'Unknown')}
         - Risk Description: {risk.get('RiskDescription', 'No description provided')}
-        Provide actionable and detailed mitigation strategies.
         """
         headers = {
             "Authorization": f"Bearer {GROQ_API_KEY}",
